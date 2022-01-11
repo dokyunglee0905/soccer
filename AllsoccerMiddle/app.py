@@ -11,7 +11,7 @@ app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 
-SECRET_KEY = 'SPARTA'
+SECRET_KEY = 'ALLSOCCER'
 
 client = MongoClient('localhost', 27017)
 db = client.dballsoccer
@@ -20,10 +20,12 @@ db = client.dballsoccer
 @app.route('/')
 def home():
     token_receive = request.cookies.get('mytoken')
+    # JWT 디코드하여 paylod에 정보 저장
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-
-        return render_template('index.html')
+        #로그인 정보로 사용자의 아이디를 가져옴
+        user_info = db.users.find_one({"username": payload["id"]})
+        return render_template('index.html', user_info=user_info['username'])
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
@@ -34,21 +36,6 @@ def home():
 def login():
     msg = request.args.get("msg")
     return render_template('login.html', msg=msg)
-
-
-@app.route('/user/<username>')
-def user(username):
-    # 각 사용자의 프로필과 글을 모아볼 수 있는 공간
-    token_receive = request.cookies.get('mytoken')
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        status = (username == payload["id"])  # 내 프로필이면 True, 다른 사람 프로필 페이지면 False
-
-        user_info = db.users.find_one({"username": username}, {"_id": False})
-        return render_template('user.html', user_info=user_info, status=status)
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("home"))
-
 
 @app.route('/sign_in', methods=['POST'])
 def sign_in():
@@ -69,7 +56,7 @@ def sign_in():
         return jsonify({'result': 'success', 'token': token})
     # 찾지 못하면
     else:
-        return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
+        return jsonify({'result': 'fail', 'msg': '아이디 또는 비밀번호가 일치하지 않습니다.'})
 
 
 @app.route('/sign_up/save', methods=['POST'])
@@ -96,49 +83,29 @@ def check_dup():
     return jsonify({'result': 'success', 'exists': exists})
 
 
-@app.route('/update_profile', methods=['POST'])
-def save_img():
-    token_receive = request.cookies.get('mytoken')
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        # 프로필 업데이트
-        return jsonify({"result": "success", 'msg': '프로필을 업데이트했습니다.'})
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("home"))
+#로그인 후, 축구 조회 API
+@app.route('/mainpage', methods=['GET'])
+def soccerTeam_list():
+    #어떤 축구의 팀을 가져올지 'league'이란 변수명에 담겨진 값을 가져와 비교
+    target = request.args.get('league');
 
+    #만일 리그가 없는. 즉 모든 리그의 팀을 가져오라는 이벤트일 경우 모두 가져오고 그렇지 않을경우 리그 조회하여 가져온다.
+    if target is not None:
+        soccerTeam = list(db.team.find({'league': target}, {'_id': False}).sort('like', -1))
+    else:
+        soccerTeam = list(db.team.find({}, {'_id': False}).sort('like', -1))
+    return jsonify({'result': 'success', 'all_Teams': soccerTeam})
 
-@app.route('/posting', methods=['POST'])
-def posting():
-    token_receive = request.cookies.get('mytoken')
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        # 포스팅하기
-        return jsonify({"result": "success", 'msg': '포스팅 성공'})
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("home"))
+# 좋아요
+@app.route('/like', methods=['POST'])
+def teams_like():
+    #이벤트가 발생한 팀 이름으로 조회하여 해당 팀 좋아요 갯수를 1 증가시킨다.
+    name_receive = request.form['name_give']
+    like = db.team.find_one({'name': name_receive})
+    new_like = like['like'] + 1
 
-
-@app.route("/get_posts", methods=['GET'])
-def get_posts():
-    token_receive = request.cookies.get('mytoken')
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        # 포스팅 목록 받아오기
-        return jsonify({"result": "success", "msg": "포스팅을 가져왔습니다."})
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("home"))
-
-
-@app.route('/update_like', methods=['POST'])
-def update_like():
-    token_receive = request.cookies.get('mytoken')
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        # 좋아요 수 변경
-        return jsonify({"result": "success", 'msg': 'updated'})
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("home"))
-
+    db.team.update_one({'name': name_receive}, {'$set': {'like': new_like}})
+    return jsonify({'result': 'success'})
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
