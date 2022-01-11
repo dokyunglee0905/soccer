@@ -108,28 +108,28 @@
         let user_info = '{{user_info}}'
 
         $(document).ready(function () {
-            //로드 된 후, showBurgers로 모든 버거 조회.
+            //로드 된 후, showTeams으로 모든 팀 조회.
             showTeams(leagueName);
         });
 
         function showTeams(string) {
             if ('EPL' == string) {
-                $('#EPL').addClass('buttoncolor')  //맥도날드 버튼색을 변경
+                $('#EPL').addClass('buttoncolor')  //epl 버튼색을 변경
                 $('#LaLiga').removeClass('buttoncolor')  //그외 다른 버튼 색 제거
                 $('#Bundesliga').removeClass('buttoncolor')
                 $('#ALL').removeClass('buttoncolor')
 
             }
             if ('La Liga' == string) {
-                $('#EPL').removeClass('buttoncolor')  //버거킹의 버튼색을 변경
-                $('#LaLiga').addClass('buttoncolor')  //그외 다른 버튼 색 제거
+                $('#EPL').removeClass('buttoncolor')
+                $('#LaLiga').addClass('buttoncolor')  // laliga 버튼색 변경
                 $('#Bundesliga').removeClass('buttoncolor')
                 $('#ALL').removeClass('buttoncolor')
             }
             if ('Bundesliga' == string) {
-                $('#EPL').removeClass('buttoncolor')  //롯데리아 버튼색을 변경
-                $('#LaLiga').removeClass('buttoncolor')  //그외 다른 버튼 색 제거
-                $('#Bundesliga').addClass('buttoncolor')
+                $('#EPL').removeClass('buttoncolor')
+                $('#LaLiga').removeClass('buttoncolor')
+                $('#Bundesliga').addClass('buttoncolor')  // bundesliga 버튼색 변경
                 $('#ALL').removeClass('buttoncolor')
             }
             if (String !== undefined)
@@ -245,7 +245,7 @@
 
                         for (let i = 0; i < commentList.length; i++) {
                             let commentid = commentList[i]._id  //코멘트의 기본 아이디
-                            let burgerid = commentList[i].burger_id  //버거의 고유 아이디
+                            let teamid = commentList[i].team_id  //버거의 고유 아이디
                             let comment = commentList[i].comment  //코멘트값
                             let username = commentList[i].username  //유저의 기본 아이디
                             let username2 = commentList[i].username  // 마스킹 처리가 끝난 유저 아이디.
@@ -269,7 +269,7 @@
                                                             </div>
                                                         </div>
                                                     </li>`
-                                $('#review_list_box' + burgerid).append(temp_html) //현재 사용자가 입력한 리뷰일 경우에만 삭제 버튼 보여짐
+                                $('#review_list_box' + teamid).append(temp_html) //현재 사용자가 입력한 리뷰일 경우에만 삭제 버튼 보여짐
                             } else {
                                 let temp_html = ` <li class="review_list">
                                                         <div class="review_div clearfix">
@@ -284,7 +284,7 @@
                                                             </div>
                                                         </div>
                                                     </li>`
-                                $('#review_list_box' + burgerid).append(temp_html); //현재 사용자가 입력한 리뷰가 아닐경우 삭제버튼을 보여주지않음
+                                $('#review_list_box' + teamid).append(temp_html); //현재 사용자가 입력한 리뷰가 아닐경우 삭제버튼을 보여주지않음
                             }
 
 
