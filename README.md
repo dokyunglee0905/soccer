@@ -41,8 +41,7 @@
 
 ## 4. 실행화면 
 
-# Wire Frame
-  ![](https://www.youtube.com/watch?v=bAEABsPnTmk)
+ https://www.youtube.com/watch?v=bAEABsPnTmk
 <br>
 
 ## 4. 핵심기능
