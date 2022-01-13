@@ -41,8 +41,7 @@
 
 ## 4. 실행화면 
 
- https://youtu.be/eXUbpzI_e0k
-<br>
+https://youtu.be/eXUbpzI_e0k
 
 ## 4. 핵심기능
 
