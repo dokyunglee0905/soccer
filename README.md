@@ -41,6 +41,7 @@
 
 ## 4. 실행화면 
 
+https://www.youtube.com/watch?v=bAEABsPnTmk
 
 
 <br>
