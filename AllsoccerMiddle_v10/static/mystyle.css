@@ -54,12 +54,12 @@ header {
 }
 
 .is-sparta {
-    color: #f2d30a !important;
+    color: #ff9429 !important;
 }
 
 
 .headers-color {
-            color: #180063 !important;
+    color: #180063 !important;
 }
 
 /* nav */
@@ -70,7 +70,7 @@ nav {
     margin: 0 auto;
 }
 
-nav ol{
+nav ol {
     float: left;
 }
 
@@ -83,6 +83,7 @@ nav ol{
     padding: 10px 20px;
     margin-right: 30px;
     font-size: 16px;
+    border-radius: 10px;
 }
 
 .nav_btn:hover {
@@ -92,7 +93,7 @@ nav ol{
 }
 
 .hover1:hover {
-    box-shadow: 200px 0 0 0 rgba(240, 178, 10, 0.5) inset;
+    box-shadow: 200px 0 0 0 rgba(241, 255, 184, 0.5) inset;
 }
 
 .logoutbox {
@@ -118,14 +119,14 @@ nav ol{
 
 /* main */
 
-.teams {
-    max-width: 1024px;
+.team {
+    max-width: 100%;
     margin: 0 auto;
 }
 
 .team_wrap {
     display: grid;
-    grid-template-columns: 2fr 10fr 3fr;
+    grid-template-columns: 2fr 7.2fr 3fr;
     margin: 60px 0;
 }
 
@@ -141,7 +142,7 @@ nav ol{
 
 .team_img {
     box-sizing: border-box;
-    width: 30%;
+    width: 20%;
     float: left;
 }
 
@@ -152,7 +153,7 @@ nav ol{
 .sub_wrap {
     box-sizing: border-box;
     padding: 4px 0 0 30px;
-    width: 60%;
+    width: 75%;
     word-break: keep-all;
     float: left;
 }
@@ -160,25 +161,36 @@ nav ol{
 .team_brand, .team_name, .team_sub {
     margin: 10px 0;
 }
-.team_league{
+
+.team_league {
     font-style: italic;
 }
-.team_name{
-    font-size: 20px;
+
+.team_brand {
+    font-size: 15px;
+}
+
+.team_name {
+    font-size: 30px;
     font-weight: 700;
+}
+
+.team_sub {
+    font-size: 20px;
 }
 
 /* Review Box*/
 .review_write {
     text-align: center;
-    width: 500px;
+    width: 100px;
     float: left;
 }
 
 .review_btn {
     padding: 10px 20px;
     margin: 20px 0;
-    background-color: black;
+    background-color: #180063;
+    border-radius: 10px;
     color: #ffffff;
 }
 
@@ -187,7 +199,7 @@ nav ol{
 }
 
 .hover4:hover {
-    box-shadow:  -200px 0 0 0 #EDB118 inset;
+    box-shadow: 200px 0 0 0 rgba(241, 255, 184, 0.5) inset;
 }
 
 
@@ -213,11 +225,12 @@ nav ol{
     word-break: break-all;
 }
 
-.review_icon_wrap{
+.review_icon_wrap {
     width: 25px;
     float: left;
 }
-.review_main_wrap{
+
+.review_main_wrap {
     width: 85%;
     float: left;
 }
@@ -255,7 +268,7 @@ nav ol{
     padding: 20px;
 }
 
-.review_complete_wrap{
+.review_complete_wrap {
     text-align: center;
 }
 
@@ -277,6 +290,8 @@ nav ol{
 
 .like_wrap {
     text-align: center;
+    /*margin: 0 200px 0 0;*/
+    width: 100px;
 }
 
 .like {
@@ -287,7 +302,8 @@ nav ol{
     padding: 10px 25px;
     margin-top: 10px;
 }
-.like_count{
+
+.like_count {
     font-weight: bold;
 }
 
@@ -296,7 +312,7 @@ nav ol{
 }
 
 .hover3:hover {
-    box-shadow:  0 -80px 0 0 rgba(0, 0, 0, 0.5) inset;
+    box-shadow: 0 -80px 0 0 rgba(0, 0, 0, 0.5) inset;
 }
 
 .comment {
@@ -304,26 +320,18 @@ nav ol{
     font-size: 13px;
 }
 
-.buttoncolor{
-    background-color:#180063;
-    color:white;
+.buttoncolor {
+    background-color: #180063;
+    color: white;
     border-color: #180063;
     font-family: 'Jua', sans-serif;
 }
 
-.table{
-            position: fixed;
-            top:360px;
-            right: 0px;
-            font-size: 5px;
-}
-
 /* 순위표 */
-.topcorner {
+.table {
+    border: 1px solid #180063;
     position: fixed;
-    top: 160px;
-    right: 30px;
-    font-size: 1px;
-    float: right;
-    width: 170px;
+    top: 360px;
+    right: 70px;
+    font-size: 11px;
 }

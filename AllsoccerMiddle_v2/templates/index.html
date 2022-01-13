@@ -103,11 +103,17 @@
             color: white;
             border-color: black;
         }
+
+        .table{
+            margin : auto;
+        }
     </style>
     <script>
         let leagueName;
         let user_info = '{{user_info}}'
-
+        $(document).ready(function () {
+            showrank()
+                });
         $(document).ready(function () {
             //로드 된 후, showTeams로 모든 팀 조회.
             showTeams(leagueName);
@@ -333,6 +339,36 @@
                 }
             });
         }
+        function showrank() {
+            $.ajax({
+                type: 'GET',
+                url: '/rank/list',
+                data: {},
+                success: function (response) {
+                    let myranks = response['show_ranks']
+                    for (let i = 0; i < myranks.length; i++) {
+                        let rank = myranks[i].teamrank;
+                        let name = myranks[i].teamname;
+                        let round = myranks[i].round;
+                        let win = myranks[i].win;
+                        let tie = myranks[i].tie;
+                        let lose = myranks[i].lose;
+                        let pts = myranks[i].pts;
+                        let temp_html = `<tr>
+                                          <th id="teamrank">${rank}</th>
+                                          <td id="teamname">${name}</td>
+                                          <td id="round">${round}</td>
+                                          <td id="win">${win}</td>
+                                          <td id="tie">${tie}</td>
+                                          <td id="lose">${lose}</td>
+                                          <td id="pts">${pts}</td>
+                                        </tr>`
+                        $('#ranktable').append(temp_html)
+
+                    }
+                }
+            })
+        }
     </script>
 </head>
 
@@ -366,6 +402,22 @@
 <div class="team" id="teams_box">
     <!-- 추가 될 내용-->
 </div>
+{#순위#}
+<table class="table">
+    <thead>
+    <div class="tablename">
+        <tr>
+            <th><abbr title="Position">순위</abbr></th>
+            <th>Team</th>
+            <th><abbr title="Played">경기수</abbr></th>
+            <th><abbr title="Won">승</abbr></th>
+            <th><abbr title="Drawn">무</abbr></th>
+            <th><abbr title="Lost">패</abbr></th>
+            <th><abbr title="Points">승점</abbr></th>
+        </tr>
+    </div>
+    </thead>
+    <tbody id="ranktable">
 </body>
 
 </html>

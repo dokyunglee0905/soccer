@@ -54,7 +54,7 @@ header {
 }
 
 .is-sparta {
-    color: #ff9429a !important;
+    color: #ff9429 !important;
 }
 
 
@@ -172,7 +172,7 @@ nav ol{
 /* Review Box*/
 .review_write {
     text-align: center;
-    width: 500px;
+    width: 300px;
     float: left;
 }
 
@@ -313,6 +313,7 @@ nav ol{
     font-family: 'Jua', sans-serif;
 }
 
+/* 순위표 */
 .table{
             position: fixed;
             top:360px;

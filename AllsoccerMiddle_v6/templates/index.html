@@ -82,7 +82,7 @@
                             let temp_html = `<div class="team_wrap" id="team_box">
                                                         <div class="team_rank"><i>${num}</i></div>
                                                         <div class="team_desc clearfix">
-                                                            <div class="team_img"><img src="${img}" alt="" style="width: 300px; heihgt:200px;"></div>
+                                                            <div class="team_img"><img src="${img}" alt="" style="max-height:200px; max-width:200px;"></div>
                                                             <div class="sub_wrap">
                                                                 <p class="team_league">${brand}</p>
                                                                 <p class="team_name">${name}</p>
@@ -311,26 +311,7 @@
     </div>
 
 </header>
-<nav class="clearfix">
-    <ol>
-        <li class="nav_menu">
-            <button class="nav_btn hover1 buttoncolor" id="ALL" onclick="window.location.reload()">ALL</button>
-        </li>
-        <li class="nav_menu">
-            <button class="nav_btn hover1" id="EPL" onclick="showTeams('EPL'), showRank('EPL')">EPL
-            </button>
-        </li>
-        <li class="nav_menu">
-            <button class="nav_btn hover1" id="LaLiga" onclick="showTeams('La Liga'), showRank('La Liga')">La Liga</button>
-        </li>
-        <li class="nav_menu">
-            <button class="nav_btn hover1" id="Bundesliga" onclick="showTeams('Bundesliga'), showRank('Bundesliga')">Bundesliga</button>
-        </li>
-    </ol>
-    <div class="logoutbox">
-        <button onclick="sign_out()" class="logout hover2">LOGOUT</button>
-    </div>
-    <div class="topcorner is-hidden" id="rank_box">
+ <div class="topcorner is-hidden" id="rank_box">
         {#순위#}
         <table class="table">
             <thead>
@@ -350,6 +331,26 @@
             </tbody>
         </table>
     </div>
+<nav class="clearfix">
+    <ol>
+        <li class="nav_menu">
+            <button class="nav_btn hover1 buttoncolor" id="ALL" onclick="window.location.reload()">ALL</button>
+        </li>
+        <li class="nav_menu">
+            <button class="nav_btn hover1" id="EPL" onclick="showTeams('EPL'), showRank('EPL')">EPL
+            </button>
+        </li>
+        <li class="nav_menu">
+            <button class="nav_btn hover1" id="LaLiga" onclick="showTeams('La Liga'), showRank('La Liga')">La Liga</button>
+        </li>
+        <li class="nav_menu">
+            <button class="nav_btn hover1" id="Bundesliga" onclick="showTeams('Bundesliga'), showRank('Bundesliga')">Bundesliga</button>
+        </li>
+    </ol>
+    <div class="logoutbox">
+        <button onclick="sign_out()" class="logout hover2">LOGOUT</button>
+    </div>
+
 
 </nav>
 

@@ -7,7 +7,6 @@ from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 from bson.objectid import ObjectId
 
-
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config['UPLOAD_FOLDER'] = "./static/profile_pics"
@@ -24,7 +23,7 @@ def home():
     # JWT 디코드하여 paylod에 정보 저장
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        #로그인 정보로 사용자의 아이디를 가져옴
+        # 로그인 정보로 사용자의 아이디를 가져옴
         user_info = db.users.find_one({"username": payload["id"]})
         return render_template('index.html', user_info=user_info['username'])
     except jwt.ExpiredSignatureError:
@@ -38,19 +37,26 @@ def login():
     msg = request.args.get("msg")
     return render_template('login.html', msg=msg)
 
+
 @app.route('/sign_in', methods=['POST'])
 def sign_in():
     # 로그인
     username_receive = request.form['username_give']
     password_receive = request.form['password_give']
 
+    # 비밀번호 해쉬처리(암호화)
     pw_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
+    # 데이터 찾기
     result = db.users.find_one({'username': username_receive, 'password': pw_hash})
 
     if result is not None:
+        # JWT 토큰에는, payload와 시크릿키가 필요합니다.
+        # 시크릿키가 있어야 토큰을 디코딩(=풀기) 해서 payload값을 볼 수 있습니다.
+        # 아래에선 id와 exp를 담았습니다. 즉, JWT 토큰을 풀면 유저 ID 값을 알 수 있습니다.
+        # exp에는 만료시간을 넣어줍니다. 만료시간이 지나면, 시크릿키로 토큰을 풀 때 만료되었다고 에러가 발생합니다.
         payload = {
-         'id': username_receive,
-         'exp': datetime.utcnow() + timedelta(seconds=60 * 60 * 24)  # 로그인 24시간 유지
+            'id': username_receive,
+            'exp': datetime.utcnow() + timedelta(seconds=60 * 60 * 24)  # 로그인 24시간 유지
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256').decode('utf-8')
 
@@ -66,13 +72,10 @@ def sign_up():
     password_receive = request.form['password_give']
     password_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
     doc = {
-        "username": username_receive,                               # 아이디
-        "password": password_hash,                                  # 비밀번호
-        "profile_name": username_receive,                           # 프로필 이름 기본값은 아이디
-        "profile_pic": "",                                          # 프로필 사진 파일 이름
-        "profile_pic_real": "profile_pics/profile_placeholder.png", # 프로필 사진 기본 이미지
-        "profile_info": ""                                          # 프로필 한 마디
+        "username": username_receive,  # 아이디
+        "password": password_hash,  # 비밀번호
     }
+    # 회원가입 정보 db에 저장
     db.users.insert_one(doc)
     return jsonify({'result': 'success'})
 
@@ -84,23 +87,24 @@ def check_dup():
     return jsonify({'result': 'success', 'exists': exists})
 
 
-#로그인 후, 축구 조회 API
+# 로그인 후, 축구 조회 API
 @app.route('/mainpage', methods=['GET'])
 def soccerTeam_list():
-    #어떤 축구의 팀을 가져올지 'league'이란 변수명에 담겨진 값을 가져와 비교
+    # 어떤 축구의 팀을 가져올지 'league'이란 변수명에 담겨진 값을 가져와 비교
     target = request.args.get('league');
 
-    #만일 리그가 없는. 즉 모든 리그의 팀을 가져오라는 이벤트일 경우 모두 가져오고 그렇지 않을경우 리그 조회하여 가져온다.
+    # 만일 리그가 없는. 즉 모든 리그의 팀을 가져오라는 이벤트일 경우 모두 가져오고 그렇지 않을경우 리그 조회하여 가져온다.
     if target is not None:
         soccerTeam = list(db.team.find({'league': target}, {'_id': False}).sort('like', -1))
     else:
         soccerTeam = list(db.team.find({}, {'_id': False}).sort('like', -1))
     return jsonify({'result': 'success', 'all_Teams': soccerTeam})
 
+
 # 좋아요
 @app.route('/like', methods=['POST'])
 def teams_like():
-    #이벤트가 발생한 팀 이름으로 조회하여 해당 팀 좋아요 갯수를 1 증가시킨다.
+    # 이벤트가 발생한 팀 이름으로 조회하여 해당 팀 좋아요 갯수를 1 증가시킨다.
     name_receive = request.form['name_give']
     like = db.team.find_one({'name': name_receive})
     new_like = like['like'] + 1
@@ -108,11 +112,12 @@ def teams_like():
     db.team.update_one({'name': name_receive}, {'$set': {'like': new_like}})
     return jsonify({'result': 'success'})
 
+
 # 리뷰 불러오기
 @app.route('/get_comment', methods=['GET'])
 def comment_list():
-    #해당하는 팀 고유아이디와 고유 코멘트를 가져온다.
-    teamid = request.args.get('teamComment')
+    # 해당하는 팀 고유아이디와 고유 코멘트를 가져온다.
+    teamid = request.args.get('team_id')
     comments = list(db.review.find({'team_id': teamid}))
     for comment in comments:
         comment["_id"] = str(comment["_id"])
@@ -123,7 +128,7 @@ def comment_list():
 @app.route('/comment', methods=['POST'])
 def teams_review():
     try:
-        #입력받은 코멘트와, 사용자의 아이디 그리고 해당되는 팀 아이디를 배열에 저장하고 해당 배열을 데이터 베이스에 입력한다.
+        # 입력받은 코멘트와, 사용자의 아이디 그리고 해당되는 팀 아이디를 배열에 저장하고 해당 배열을 데이터 베이스에 입력한다.
         comment_receive = request.form['comment_give']
         teamId = request.form['teamId']
         username = request.form['username']
@@ -137,18 +142,29 @@ def teams_review():
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
+
 # 리뷰 삭제
 @app.route('/comment_delete', methods=['POST'])
 def review_delete():
-    #해당 리뷰를 작성한 작성자일 경우, 코멘트의 고유아이디값을 조회해 해당 이벤트가 일어난 코멘트값만 삭제한다.
+    # 해당 리뷰를 작성한 작성자일 경우, 코멘트의 고유아이디값을 조회해 해당 이벤트가 일어난 코멘트값만 삭제한다.
     comment_receive = request.form['comment_give']
     db.review.delete_one({'_id': ObjectId(comment_receive)})
     return jsonify({'result': 'success'})
+
+
 # 순위
 @app.route('/rank/list', methods=['GET'])
 def show_rank():
-    team_rank = list(db.eplrank.find({},{'_id': False}))
-    return jsonify({'show_ranks':team_rank})
+    # 어떤 축구의 팀을 가져올지 'league'이란 변수명에 담겨진 값을 가져와 비교
+    target = request.args.get('league');
+
+    # 만일 리그가 없는. 즉 모든 리그의 팀을 가져오라는 이벤트일 경우 모두 가져오고 그렇지 않을경우 리그 조회하여 가져온다.
+    if target is not None:
+        team_rank = list(db.eplrank.find({'league': target}, {'_id': False}).sort('pts', -1))
+    else:
+        team_rank = ''
+    return jsonify({'result': 'success', 'all_ranks': team_rank})
+
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)

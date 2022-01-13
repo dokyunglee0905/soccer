@@ -104,9 +104,14 @@
             border-color: black;
         }
 
-        .table{
-            margin : auto;
+
+        .table {
+            position : fixed;
+            right: 0px;
+            top: 0px;
+            font-size : 0.75em;
         }
+
     </style>
     <script>
         let leagueName;
@@ -162,7 +167,7 @@
                             let temp_html = `<div class="team_wrap" id="team_box">
                                                         <div class="team_rank"><i>${num}</i></div>
                                                         <div class="team_desc clearfix">
-                                                            <div class="team_img"><img src="${img}" alt=""></div>
+                                                            <div class="team_img"><img src="${img}" alt="" style="width:300px; height:200px;"></div>
                                                             <div class="sub_wrap">
                                                                 <p class="team_league">${brand}</p>
                                                                 <p class="team_name">${name}</p>
@@ -373,6 +378,7 @@
 </head>
 
 <body>
+
 <header class="is-white">
     <div class="has-text-centered" style="padding-bottom:16px;margin:auto;">
         <h1 class="title headers-color ">모두의싸커</h1>
@@ -380,6 +386,25 @@
 
     </div>
 </header>
+{#순위#}
+    <table class="table">
+        <thead>
+        <div class="tablename">
+            <tr>
+                <th><abbr title="Position">순위</abbr></th>
+                <th>Team</th>
+                <th><abbr title="Played">경기수</abbr></th>
+                <th><abbr title="Won">승</abbr></th>
+                <th><abbr title="Drawn">무</abbr></th>
+                <th><abbr title="Lost">패</abbr></th>
+                <th><abbr title="Points">승점</abbr></th>
+            </tr>
+        </div>
+        </thead>
+        <tbody id="ranktable">
+        </tbody>
+    </table>
+
 <nav class="clearfix">
     <ol>
         <li class="nav_menu">
@@ -402,22 +427,7 @@
 <div class="team" id="teams_box">
     <!-- 추가 될 내용-->
 </div>
-{#순위#}
-<table class="table">
-    <thead>
-    <div class="tablename">
-        <tr>
-            <th><abbr title="Position">순위</abbr></th>
-            <th>Team</th>
-            <th><abbr title="Played">경기수</abbr></th>
-            <th><abbr title="Won">승</abbr></th>
-            <th><abbr title="Drawn">무</abbr></th>
-            <th><abbr title="Lost">패</abbr></th>
-            <th><abbr title="Points">승점</abbr></th>
-        </tr>
-    </div>
-    </thead>
-    <tbody id="ranktable">
+
 </body>
 
 </html>
