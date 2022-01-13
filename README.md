@@ -42,7 +42,7 @@
 ## 4. 실행화면 
 
 # Wire Frame
-  ![](https://images.velog.io/images/fnrkp089/post/a24e0b89-b9e9-41a5-ba09-15bcb8a2f9f2/KakaoTalk_20210913_145859026.jpg)
+  ![](https://www.youtube.com/watch?v=bAEABsPnTmk)
 <br>
 
 ## 4. 핵심기능
